@@ -7,7 +7,7 @@ Supervised models can still be very useful. Although they require some extensive
 * Model results do not require lengthy interpretation, since categories have been already defined.
 * Applying the model is very quick and scale well with big corpora.
 
-TidySupervise is still in the alpha stage: supervised classification is currently limited to SVM models.
+TidySupervise is still very much in the alpha stage: supervised classification is currently limited to SVM models.
 
 You can install the package using 
 
@@ -17,9 +17,9 @@ devtools::install_github("Numapresse/TidySupervise")
 
 This introduction vignette gives a thorough tour of all the functions, using a labelled dataset of French newspaper from the 1920s and the 1930s.
 
-## Creating a training corpus
+## Create a training corpus
 
-Supervised models are fully appropriate when your are dealing with a lot of texts and want to go beyond an "exploratory" stage. TidySupervised was initially developed to classify millions of French newspaper articles published before 1945 and create corpora revolving a specific news genre (political news, stock exchange section, serial novels, weather report, and so forth…)
+Supervised models are fully appropriate when your are dealing with a lot of texts and want to go beyond an "exploratory" stage. TidySupervise was initially developed to classify millions of French newspaper articles published before 1945 and to extract corpora revolving a specific news genre (political news, stock exchange section, serial novels, weather report, and so forth…)
 
 Training a text model is more an art than a science. You'll have to make a lot of subjective calls: whether a document belongs to a specific labelling category, whether this category should really exist at all, whether the document is classifiable in the first place. This is more akin to the work a literary critic than to a systematic scientific investigation.
 
@@ -43,7 +43,7 @@ With a big training corpus, it may be more advisable to only use a random sample
 tds_generate(dir = "training_corpora", metadata_only = TRUE, random_document = 1000) #We will use only 1000 documents
 ```
 
-## Preparing the corpus
+## Prepare the corpus
 
 Once the spreadsheet has been filled, you can reopen them like any structured data frame.
 
@@ -114,7 +114,7 @@ training_corpus_processed
 
 Lowering max_word_set (or increasing the min_doc_count threshold) can quicken the training process with little quality loss by having smaller word/document matrix.
 
-## Training the model
+## Train the model
 
 Now that the corpus has been processed, training the model is fairly straightforward. All you have to do is use tds_model. Notice it may take some time (not more than a few minutes).
 
