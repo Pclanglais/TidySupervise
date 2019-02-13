@@ -1,0 +1,56 @@
+# Hello, world!
+#
+# This is an example function named 'hello'
+# which prints 'Hello, world!'.
+#
+# You can learn more about package authoring with RStudio at:
+#
+#   http://r-pkgs.had.co.nz/
+#
+# Some useful keyboard shortcuts for package authoring:
+#
+#   Build and Reload Package:  'Cmd + Shift + B'
+#   Check Package:             'Cmd + Shift + E'
+#   Test Package:              'Cmd + Shift + T'
+
+hello <- function() {
+  print("Hello, world!")
+}
+
+#Some ideas:
+#Model always use 4000 words at most (and need forcing to go beyond)
+library(dplyr)
+library(ggplot2)
+library(tidytext)
+source("R/tds_process.R")
+source("R/tds_train.R")
+source("R/tds_model.R")
+source("R/tds_matrix.R")
+source("R/tds_apply.R")
+source("R/tds_open.R")
+
+
+
+tds_generate(dir = "test_corpora", metadata_only = TRUE)
+
+training_corpus = tds_associate(dir = "test_corpora", training_metadata = "test_corpora.csv", csv_type = "semicolon")
+
+complete_text_classification = readr::read_tsv("corpus_classification.tsv.zip")
+
+text_count = text_classification %>% tidytext::unnest_tokens(token, text)
+
+test_model_2 = text_count %>%
+  tds_process(training = TRUE, lemmatization = "french", segment_size = 90, min_doc_count = 2, max_word_set = 3000)
+
+test_model = tds_model(test_model_2, min_label = 0, max_label = 25)
+
+tds_open(test_model)
+
+
+
+text_apply = readr::read_tsv("corpus_classification.tsv") %>% filter(grepl("1924-08-11", date))
+text_apply = text_apply %>%
+  tidytext::unnest_tokens(token, text) %>%
+  tds_process(segment_size = 90, min_doc_count = 2, max_word_set = 0, lemmatization = "french") %>%
+  tds_apply(model = test_model)
+

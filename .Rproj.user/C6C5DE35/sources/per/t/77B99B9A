@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1549583377995.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4087678420",
+    "id" : "77B99B9A",
+    "lastKnownWriteTime" : 1549676861,
+    "last_content_update" : 1549676861923,
+    "path" : "~/Documents/Projet/Numapresse/tidysupervise/R/tds_process.R",
+    "project_path" : "R/tds_process.R",
+    "properties" : {
+        "cursorPosition" : "4,10",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

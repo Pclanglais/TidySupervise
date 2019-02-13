@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1549625222219.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2991463837",
+    "id" : "119C59B8",
+    "lastKnownWriteTime" : 1549982427,
+    "last_content_update" : 1549982427991,
+    "path" : "~/Documents/Projet/Numapresse/tidysupervise/NAMESPACE",
+    "project_path" : "NAMESPACE",
+    "properties" : {
+        "cursorPosition" : "3,49",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 12,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_namespace"
+}
