@@ -9,6 +9,11 @@
 #' @return The results of the SVM model.
 tds_apply <- function(text_count, model, classification_matrix = FALSE, prob_state = TRUE, tidy_results = TRUE) {
 
+  #A small hack to take into account the use of entire documents for classification purposes.
+  if(!"segment" %in% colnames(text_count)) {
+    text_count = text_count %>% rename(segment = document)
+  }
+
   #Just in case, the user would prefer to pass their own matrix.
   if (classification_matrix == FALSE) {
     classification_matrix = tds_matrix(text_count)

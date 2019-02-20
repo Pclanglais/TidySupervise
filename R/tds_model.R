@@ -12,6 +12,11 @@
 #'  tds_model(text_count, classification_matrix = FALSE, prob_state = TRUE, min_label = 70, max_label = 150, cost_variable = 0)
 tds_model <- function(text_count, classification_matrix = FALSE, prob_state = TRUE, min_label = 20, max_label = 100, cost_variable = 0){
 
+  #A small hack to take into account the use of entire documents for classification purposes.
+  if(!"segment" %in% colnames(text_count)) {
+    text_count = text_count %>% rename(segment = document)
+  }
+
   if (classification_matrix == FALSE) {
     classification_matrix = tds_matrix(text_count)
   }

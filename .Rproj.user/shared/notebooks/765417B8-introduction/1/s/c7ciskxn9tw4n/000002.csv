@@ -1,4 +1,6 @@
-"0","corpus_model
+"0","corpus_model = tds_model(training_corpus_processed)
+corpus_model = tds_model(training_corpus_processed)
+corpus_model
 "
 "1","
 Call:"
@@ -36,14 +38,14 @@ Call:"
 "
 "1","      gamma: "
 "1"," "
-"1","0.0003563792"
+"1","0.0003601008"
 "1"," "
 "1","
 "
 "1","
 Number of Support Vectors: "
 "1"," "
-"1","962"
+"1","965"
 "1","
 
 "

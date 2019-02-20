@@ -2,8 +2,8 @@
 #' A function to get word count corrected by tf_idf values
 #'
 #' @param text_count A tidy dataframe of textual data (typically the "long" format used by tidytext)
-#' @param training Set to true if the output of the text process is to train a new model. The function will simply keep a "label" column that should exist.
-#' @param segment_size The standard size of a continuous segment of text (100 as a default). Remaining segments within a document will be discarded.
+#' @param segment_size The standard size of a continuous segment of text. Remaining segments within a document will be discarded. If set to 0 (default), documents will be used as the main units.
+#' @param training
 #' @param no_number Set to true to remove all numbers from the dataset. This is usually recommended.
 #' @param lemmatization Use one of the five available languages for lemmatization: "english", "french", "german", "spanish" or "italian". Lemmatization is approximative but usually enhance the results (since inflected words can be more readily used)
 #' @param min_doc_count The minimum number of documents where a word should be present. It's useful to avoid over-fitting.
@@ -12,7 +12,7 @@
 #' @return A processed version of the textual dataset using tf_idf values with cosine normalization.
 #' @examples
 #'  tds_clean(text_count, segment_size = 90, min_doc_count = 4, max_word_set = 3000)
-tds_process <- function(text_count, segment_size = 100, training = FALSE, lemmatization = "none", no_number = TRUE, min_doc_count = 2, min_word_count = 0, max_word_set = 3000) {
+tds_process <- function(text_count, segment_size = 0, training = FALSE, lemmatization = "none", no_number = TRUE, min_doc_count = 2, min_word_count = 0, max_word_set = 3000) {
 
   #Cleaning the numbers (recommended)
   if (no_number == TRUE) {
@@ -34,23 +34,35 @@ tds_process <- function(text_count, segment_size = 100, training = FALSE, lemmat
       rename(token = lemma)
   }
 
-  #We initialize the segments and filter every segments that is lower than the mean segment size.
+  #If segments are > to 0, we initialize the segments and filter every segments that is lower than the mean segment size.
+  #Otherwise, we just group everything on the documents.
   text_count <- text_count %>%
     group_by(document) %>%
     mutate(word_id = 1:n()) %>%
-    ungroup() %>%
-    mutate(segment = paste0(document, "_", (word_id+segment_size)%/%segment_size)) %>%
-    ungroup() %>%
-    group_by(segment) %>%
-    mutate(total_segment = max(1:n())+1) %>%
-    filter(total_segment>=segment_size)
+    ungroup()
 
-  #Everything is set: we can now count the occurrences.
-  #We check if we are in the training phase or not. In the last case, label do not exist (since we are to predict them)
-  if(training == TRUE) {
-    text_count <- text_count %>% group_by(document, label, segment, token) %>% summarise(count = n()) %>% ungroup()
+  if (segment_size > 0) {
+    text_count <- text_count %>%
+      mutate(segment = paste0(document, "_", (word_id+segment_size)%/%segment_size)) %>%
+      ungroup() %>%
+      group_by(segment) %>%
+      mutate(total_segment = max(1:n())+1) %>%
+      filter(total_segment>=segment_size)
+
+    #We check if we are in the training phase. In this case we take the label column into account.
+    if (training == TRUE) {
+      text_count <- text_count %>% group_by(document, label, segment, token) %>% summarise(count = n()) %>% ungroup()
+    } else {
+      text_count <- text_count %>% group_by(document, segment, token) %>% summarise(count = n()) %>% ungroup()
+    }
   } else {
-    text_count <- text_count %>% group_by(document, segment, token) %>% summarise(count = n()) %>% ungroup()
+
+    #Same as the last conditional, in the case segments division is not set.
+    if (training == TRUE) {
+      text_count <- text_count %>% group_by(document, label, token) %>% summarise(count = n()) %>% ungroup()
+    } else {
+      text_count <- text_count %>% group_by(document, token) %>% summarise(count = n()) %>% ungroup()
+    }
   }
 
   #We filter all the occurrences that do not appear in n different documents (n = min_doc_count)
@@ -81,11 +93,26 @@ tds_process <- function(text_count, segment_size = 100, training = FALSE, lemmat
   }
 
   #We extract the tf_idf values thanks to the tidy text package
-  text_count <- text_count %>% bind_tf_idf(token, segment, count)
 
-  #We apply cosine normalization (essential to get good svm results)
-  text_count <- text_count %>% group_by(segment) %>% mutate(cosine_variable = sqrt(sum(tf_idf^2)))
-  text_count <- text_count %>% ungroup() %>% mutate(corrected_tf_idf = tf_idf/cosine_variable)
+  if(segment_size > 0) {
+
+    #We extract the tf_idf values thanks to the tidy text package
+    text_count <- text_count %>% bind_tf_idf(token, segment, count)
+
+    #We apply cosine normalization (essential to get good svm results)
+    text_count <- text_count %>% group_by(segment) %>% mutate(cosine_variable = sqrt(sum(tf_idf^2)))
+    text_count <- text_count %>% ungroup() %>% mutate(corrected_tf_idf = tf_idf/cosine_variable)
+  } else {
+
+    #Same as before, only this time we group on the documents (since the segments do not exist)
+
+    #We extract the tf_idf values thanks to the tidy text package
+    text_count <- text_count %>% bind_tf_idf(token, document, count)
+
+    #We apply cosine normalization (essential to get good svm results)
+    text_count <- text_count %>% group_by(document) %>% mutate(cosine_variable = sqrt(sum(tf_idf^2)))
+    text_count <- text_count %>% ungroup() %>% mutate(corrected_tf_idf = tf_idf/cosine_variable)
+  }
 
   return(text_count)
 }
