@@ -97,10 +97,10 @@ training_corpus_processed = tds_process(training_corpus, training = TRUE, lemmat
 training_corpus_processed
 ```
 
-You can also specify the length of the continuous text segments (default is 100). Longer segments may yield better results at the cost of less diversity (since there will be fewer segments).
+You can the text into continuous text segments (default is 100). This is recommended for training as the models can be affected by the use of documents of heterogeneous size. Longer segments may yield better results at the cost of less diversity (since there will be fewer segments).
 
 ```{r}
-training_corpus_processed = tds_process(training_corpus, training = TRUE, segment_size = 200)
+training_corpus_processed = tds_process(training_corpus, training = TRUE, segment_size = 100)
 training_corpus_processed
 ```
 
@@ -108,18 +108,18 @@ Finally, when dealing with a bigger training corpus, you may want to have more c
 
 ```{r}
 #Here we only keep token that have appeared in at least 4 different documents and, at most the 2000 more frequent token.
-training_corpus_processed = tds_process(training_corpus, training = TRUE, min_doc_count = 4, max_word_set = 2000)
+training_corpus_processed = tds_process(training_corpus, training = TRUE, segment_size = 100, min_doc_count = 4, max_word_set = 2000)
 training_corpus_processed
 ```
 
 Lowering max_word_set (or increasing the min_doc_count threshold) can quicken the training process with little quality loss by having smaller word/document matrix.
 
-## Train the model
+## Training the model
 
 Now that the corpus has been processed, training the model is fairly straightforward. All you have to do is use tds_model. Notice it may take some time (not more than a few minutes).
 
 ```{r}
-training_corpus_processed = tds_process(training_corpus, training = TRUE)
+training_corpus_processed = tds_process(training_corpus, training = TRUE, lemmatization = "french", segment_size = 100)
 corpus_model = tds_model(training_corpus_processed)
 corpus_model
 ```
@@ -142,7 +142,7 @@ In a first phase you may want to evaluate the model using some part of the origi
 
 ```{r}
 #Here we set prop_train to 85%, which leaves 15% of the original corpus for testing.
-test_model = tds_process(training_corpus, training = TRUE) %>%
+test_model = tds_process(training_corpus, training = TRUE, lemmatization = "french", segment_size = 100) %>%
   tds_test(prop_train = 85)
 test_model
 ```
