@@ -5,7 +5,7 @@
 \title{A function to train an SVM model.}
 \usage{
 tds_model(text_count, classification_matrix = FALSE, prob_state = TRUE,
-  min_label = 20, max_label = 100, cost_variable = 0)
+  min_label = 0, max_label = 0, cost_variable = 0)
 }
 \arguments{
 \item{text_count}{A tidy dataframe of textual data pre-processed by tds_process}
@@ -14,9 +14,9 @@ tds_model(text_count, classification_matrix = FALSE, prob_state = TRUE,
 
 \item{prob_state}{Set to true (default) to get the detailed probabilities. This is highly recommended but can take longer.}
 
-\item{min_label}{The minimal number of document per labels. If some labels are poorly represented and harder to predict it can be useful to drop them.}
+\item{min_label}{The minimal number of document per labels. Default is no threshold (0). If some labels are poorly represented and harder to predict it can be useful to drop them.}
 
-\item{max_label}{The maximal number of document per labels. SVM is sensible to over-fitting: if a label is too represented in the original corpora, it will over-populate the results.}
+\item{max_label}{The maximal number of document per labels. Default is no threshold (0). SVM is sensible to over-fitting: if a label is too represented in the original corpora, it will over-populate the results.}
 
 \item{cost_variable}{A parametrized value for svm classification (purely optional)}
 }
