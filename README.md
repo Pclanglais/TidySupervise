@@ -49,7 +49,7 @@ Once the spreadsheet has been filled, you can reopen them like any structured da
 
 ```{r eval=FALSE}
 training_corpus = read_tsv("training_corpus.tsv") #If the file is a tsv.
-training_corpus = read_tsv("training_corpus.csv") #If the file is a tcv.
+training_corpus = read_csv("training_corpus.csv") #If the file is a csv.
 ```
 
 In the special case where you have not kept the texts in the labelling dataset, you may retrieve them using tds_associate.
