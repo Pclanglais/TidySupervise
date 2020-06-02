@@ -9,8 +9,8 @@
 #' @param cost_variable A parametrized value for svm classification (purely optional)
 #' @return An SVM model that can be interpreted using tds_open.
 #' @examples
-#'  tds_model(text_count, classification_matrix = FALSE, prob_state = TRUE, min_label = 70, max_label = 150, cost_variable = 0)
-tds_model <- function(text_count, classification_matrix = FALSE, prob_state = TRUE, min_label = 20, max_label = 100, cost_variable = 0){
+#'  tds_model(text_count, classification_matrix = FALSE, prob_state = TRUE, min_label = 0, max_label = 0, cost_variable = 0)
+tds_model <- function(text_count, classification_matrix = FALSE, prob_state = TRUE, min_label = 0, max_label = 0, cost_variable = 0){
 
   #A small hack to take into account the use of entire documents for classification purposes.
   if(!"segment" %in% colnames(text_count)) {
