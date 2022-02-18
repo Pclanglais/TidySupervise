@@ -26,7 +26,7 @@ tds_test <- function(text_count, classification_matrix = FALSE, prop_train = 80,
   prop_train = prop_train/100
 
   #We retrieve the name and label of each document.
-  classification_code <- data_frame(segment = row.names(classification_matrix))
+  classification_code <- tibble(segment = row.names(classification_matrix))
   classification_code <- classification_code %>%
     inner_join(text_count %>% group_by(segment, label) %>% summarise(), by=c("segment" = "segment")) %>%
     mutate(labels = as.factor(label))
@@ -59,7 +59,7 @@ tds_test <- function(text_count, classification_matrix = FALSE, prop_train = 80,
     fit <- svm(train_matrix, classification_code$labels[1:n_element], kernel = "linear", cost = cost_variable)
   }
   predictions <- predict(fit,test_matrix)
-  predictions <- data_frame(original = classification_code$labels[(n_element+1):nrow(classification_matrix)], prediction = predictions) %>% mutate(result = ifelse(original == prediction, 1, 0))
+  predictions <- tibble(original = classification_code$labels[(n_element+1):nrow(classification_matrix)], prediction = predictions) %>% mutate(result = ifelse(original == prediction, 1, 0))
   message(paste0("Results are at ", as.character(100*(sum(predictions$result)/nrow(predictions))), "% for ", as.character(nrow(predictions)), " attempts"))
   return(predictions)
 }
