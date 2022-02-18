@@ -10,11 +10,12 @@
 tds_open <- function(model, show_graphic = TRUE, display_token = 10) {
 
   #Crowling through the complicated svm data structure to get the labels and the documents…
-  labels <- data_frame(label_ = model$fitted, document = attr(model$fitted, "name"))
+  labels <- tibble(label_ = model$fitted, document = attr(model$fitted, "name"))
 
   #…and the values per word
-  grouped_sv <- as_data_frame(model$SV) %>%
-    mutate(document = row.names(model$SV)) %>%
+  list_document = row.names(model$SV)
+  grouped_sv <- as_tibble(model$SV) %>%
+    mutate(document = list_document) %>%
     inner_join(labels, by=c("document" = "document")) %>%
     group_by(label_) %>%
     select(-document) %>%
