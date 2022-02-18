@@ -21,7 +21,7 @@ tds_model <- function(text_count, classification_matrix = FALSE, prob_state = TR
     classification_matrix = tds_matrix(text_count)
   }
   #We retrieve the name and label of each document.
-  classification_code <- data_frame(segment = row.names(classification_matrix))
+  classification_code <- tibble(segment = row.names(classification_matrix))
   classification_code <- classification_code %>%
     left_join(text_count %>% group_by(segment, label) %>% summarise(), by=c("segment" = "segment")) %>%
     mutate(labels = as.factor(label))
