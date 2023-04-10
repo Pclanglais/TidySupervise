@@ -9,7 +9,7 @@ Supervised models can still be very useful. Although they require some extensive
 
 TidySupervise is still very much in the alpha stage: supervised classification is currently limited to SVM models.
 
-You can install the package using 
+You can install the package using:
 
 ```
 devtools::install_github("Numapresse/TidySupervise")
@@ -19,11 +19,11 @@ This introduction vignette gives a thorough tour of all the functions, using a l
 
 ## Create a training corpus
 
-Supervised models are fully appropriate when your are dealing with a lot of texts and want to go beyond an "exploratory" stage. TidySupervise was initially developed to classify millions of French newspaper articles published before 1945 and to extract corpora revolving a specific news genre (political news, stock exchange section, serial novels, weather report, and so forth…)
+Supervised models are fully appropriate when your are dealing with a lot of texts and want to go beyond an "exploratory" stage. TidySupervise was initially developed to classify millions of French newspaper articles published before 1945 and to extract corpora revolving a specific news genre (political news, stock exchange section, serial novels, weather report, and so forth…).
 
 Training a text model is more an art than a science. You'll have to make a lot of subjective calls: whether a document belongs to a specific labelling category, whether this category should really exist at all, whether the document is classifiable in the first place. This is more akin to the work a literary critic than to a systematic scientific investigation.
 
-The most practical way to label the data remains to put the training corpus in an spreadsheet file. If the corpus is already stored in a directory, you can use TidySupervise function tds_generate to create the corpus.
+The most practical way to label the data remains to put the training corpus in a spreadsheet file. If the corpus is already stored in a directory, you can use TidySupervise function tds_generate to create the corpus.
 
 ```{r eval=FALSE}
 tds_generate(dir = "training_corpus")
@@ -71,7 +71,7 @@ training_corpus = unnest_tokens(training_corpus, token, text)
 training_corpus
 ```
 
-Each occurrence of a token corresponds now to one line in a table. Several prepararation steps remain necessary before the actual training. They can all be done using tds_process. The output is the number of occurrences per document and per word ponderated by term frequencies and inverse document frequencies (or tf_idf, using the bind_tf_idf function from tidy_text) and some cosine normalization. Concretely, it is not necessary to remove the "stop words": tds_process already weight the overtly frequent words. In some case, stop words can be actually meaningful. For instance, first-person pronouns may become fairly rare in more formal contexts: when trying to model newspaper genres, they turned out to be a pretty good predictor of the serial novel.
+Each occurrence of a token corresponds now to one line in a table. Several preparation steps remain necessary before the actual training. They can all be done using tds_process. The output is the number of occurrences per document and per word ponderated by term frequencies and inverse document frequencies (or tf_idf, using the bind_tf_idf function from tidy_text) and some cosine normalization. Concretely, it is not necessary to remove the "stop words": tds_process already weight the overtly frequent words. In some case, stop words can be actually meaningful. For instance, first-person pronouns may become fairly rare in more formal contexts: when trying to model newspaper genres, they turned out to be a pretty good predictor of the serial novel.
 
 Besides, we set "training" to TRUE, simply in order to keep the label column at the end of the text processing. This will not be necessary when we will apply the model to a new set of data.
 
@@ -89,7 +89,7 @@ training_corpus %>%
   tds_process(training = TRUE)
 ```
 
-tds_process includes several parameters that can be customized. It is possible to lemmatize the texts if they are either in English, French, German, Spainish or Italian using lookup tables borrowed to Spacy. It can enhance siginificantly the quality of the classification since inflected forms may become more readily usable.
+tds_process includes several parameters that can be customized. It is possible to lemmatize the texts if they are either in English, French, German, Spanish or Italian using lookup tables borrowed to Spacy. It can enhance significantly the quality of the classification since inflected forms may become more readily usable.
 
 ```{r}
 training_corpus = unnest_tokens(training_corpus, token, text)
@@ -97,7 +97,7 @@ training_corpus_processed = tds_process(training_corpus, training = TRUE, lemmat
 training_corpus_processed
 ```
 
-You can the text into continuous text segments (default is 100). This is recommended for training as the models can be affected by the use of documents of heterogeneous size. Longer segments may yield better results at the cost of less diversity (since there will be fewer segments).
+You can then text into continuous text segments (default is 100). This is recommended for training as the models can be affected by the use of documents of heterogeneous size. Longer segments may yield better results at the cost of less diversity (since there will be fewer segments).
 
 ```{r}
 training_corpus_processed = tds_process(training_corpus, training = TRUE, segment_size = 100)
